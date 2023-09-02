@@ -1,0 +1,17 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "dma65ml/ubuntu20.04"
+  config.vm.box_version = "1.0"
+
+  config.vm.synced_folder('.', '/vagrant', type: 'nfs', disabled: true)
+
+  config.vm.provider :vmware_esxi do |esxi|
+    esxi.esxi_hostname = "#{ENV['ESXI_HOSTNAME']}"
+    esxi.esxi_username = "#{ENV['ESXI_USERNAME']}"
+    esxi.esxi_password = 'env:ESXI_PASSWORD'
+  end
+
+end
