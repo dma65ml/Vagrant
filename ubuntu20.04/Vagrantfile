@@ -5,6 +5,8 @@ Vagrant.configure("2") do |config|
 
   config.vm.box = "dma65ml/ubuntu20.04"
   config.vm.box_version = "1.0"
+  current_dir = File.basename(Dir.getwd)
+  config.vm.hostname = current_dir
 
   config.vm.synced_folder('.', '/vagrant', type: 'nfs', disabled: true)
 
