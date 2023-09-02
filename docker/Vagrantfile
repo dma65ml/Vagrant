@@ -1,0 +1,30 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+#
+# Vagrantfile ubuntu 20.04 + docker
+#
+
+$script = <<SCRIPT
+curl -sSL https://get.docker.com/ | sh
+sudo usermod -aG docker vagrant
+echo "alias docker-compose='docker compose'" >>/home/vagrant/.zshrc
+SCRIPT
+
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "dma65ml/ubuntu20.04"
+  config.vm.box_version = "1.0"
+  current_dir = File.basename(Dir.getwd)
+  config.vm.hostname = current_dir
+
+  config.vm.synced_folder('.', '/vagrant', type: 'nfs', disabled: true)
+
+  config.vm.provision "shell", inline: $script
+
+  config.vm.provider :vmware_esxi do |esxi|
+    esxi.esxi_hostname = "#{ENV['ESXI_HOSTNAME']}"
+    esxi.esxi_username = "#{ENV['ESXI_USERNAME']}"
+    esxi.esxi_password = 'env:ESXI_PASSWORD'
+  end
+
+end
